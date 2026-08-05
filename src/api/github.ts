@@ -15,3 +15,10 @@ export interface GitHubRepo {
         avatar_url: string
     }
 }
+
+
+// Top level shape of GitHub Search API response - wraps array of GitHubRepo items plus a total_count
+interface SearchReposResponse {
+    total_count: number
+    items: GitHubRepo[]
+}
