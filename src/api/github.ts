@@ -7,7 +7,7 @@ export interface GitHubRepo {
     name: string
     full_name: string
     html_url: string
-    description: string
+    description: string | null // string | null because GitHub returns `null` for repos w/no description
     stargazers_count: number
     updated_at: string
     owner: {
@@ -22,3 +22,16 @@ interface SearchReposResponse {
     total_count: number
     items: GitHubRepo[]
 }
+
+export async function searchRepositories(query:string): Promise<SearchReposResponse> {
+    // encodeURIComponent escapes special characters (spaces, &, etc.) in the search term so the URL stays valid.
+    const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}`
+
+    const response = await fetch(url)
+
+    if(!response.ok) {
+        throw new Error(`Github API Error: ${response.status}`)
+    }
+    
+    return response.json()
+ }
