@@ -25,7 +25,7 @@ interface SearchReposResponse {
 
 export type SortOption = 'best-match' | 'stars' | 'updated'
 
-export async function searchRepositories(query:string, sort:SortOption): Promise<SearchReposResponse> {
+export async function searchRepositories(query:string, sort:SortOption, perPage:number, page:number): Promise<SearchReposResponse> {
     // encodeURIComponent escapes special characters (spaces, &, etc.) in the search term so the URL stays valid.
     const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}`
 
@@ -36,7 +36,9 @@ export async function searchRepositories(query:string, sort:SortOption): Promise
         sortParams = '&sort=updated&order=desc'
     }
 
-    const finalURL = `${url}${sortParams}`
+    const paginationParams = `&per_page=${perPage}&page=${page}`
+
+    const finalURL = `${url}${sortParams}${paginationParams}`
 
     const response = await fetch(finalURL)
 
