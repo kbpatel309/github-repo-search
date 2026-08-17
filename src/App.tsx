@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import './App.css'
-import { searchRepositories } from './api/github'
+import { searchRepositories, type SortOption } from './api/github'
 import { useQuery } from '@tanstack/react-query'
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('')
   const [submittedTerm, setSubmittedTerm] = useState('')
+  const [sortBy, setSortBy] = useState<SortOption>('best-match')
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['repos', submittedTerm],
-    queryFn: () => searchRepositories(submittedTerm),
+    queryKey: ['repos', submittedTerm, sortBy],
+    queryFn: () => searchRepositories(submittedTerm, sortBy),
     enabled: submittedTerm != '',
   })
 
@@ -30,6 +31,12 @@ function App() {
         />
         <button type="submit">Search</button>
       </form>
+
+      <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)}>
+        <option value="best-match">Best match</option>
+        <option value="stars">Stars</option>
+        <option value="updated">Most updated</option>
+      </select>
 
       {isLoading && <p>isLoading...</p>}
       

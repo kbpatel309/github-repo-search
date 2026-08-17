@@ -23,15 +23,27 @@ interface SearchReposResponse {
     items: GitHubRepo[]
 }
 
-export async function searchRepositories(query:string): Promise<SearchReposResponse> {
+export type SortOption = 'best-match' | 'stars' | 'updated'
+
+export async function searchRepositories(query:string, sort:SortOption): Promise<SearchReposResponse> {
     // encodeURIComponent escapes special characters (spaces, &, etc.) in the search term so the URL stays valid.
     const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}`
 
-    const response = await fetch(url)
+    let sortParams = ''
+    if (sort === 'stars') {
+        sortParams = '&sort=stars&order=desc'
+    } else if (sort === 'updated') {
+        sortParams = '&sort=updated&order=desc'
+    }
+
+    const finalURL = `${url}${sortParams}`
+
+    const response = await fetch(finalURL)
 
     if(!response.ok) {
         throw new Error(`Github API Error: ${response.status}`)
     }
+
     
     return response.json()
  }
