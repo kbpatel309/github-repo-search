@@ -80,12 +80,32 @@ function App() {
       {error && <p>{error.message}</p>}
 
       {data && (
-        <ul>
+        <div className="results">
           {data.items.map((repo) => (
-          <li key={repo.id}>{repo.name}</li>
-          ))}
-        </ul>
-      )}
+            <div className="repo-card" key={repo.id}>
+              <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="repo-name">
+                {repo.full_name}
+              </a>
+              {repo.description && <p className="repo-description">{repo.description}</p>}
+              {repo.topics.length > 0 && (
+                <div className="repo-topics">
+                  {repo.topics.map((topic) => (
+                    <span key={topic} className="topic-tag">{topic}</span>
+                  ))}
+                  </div>
+                )}
+                <div className="repo-meta">
+                  {repo.stargazers_count.toLocaleString()} stars · Updated on{' '}
+                  {new Date(repo.updated_at).toLocaleDateString('en-US', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </div>
+              </div>
+            ))}
+            </div>
+          )}
 
     </div>
   )

@@ -10,6 +10,7 @@ export interface GitHubRepo {
     description: string | null // string | null because GitHub returns `null` for repos w/no description
     stargazers_count: number
     updated_at: string
+    topics: string[]
     owner: {
         login: string
         avatar_url: string
